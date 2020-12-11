@@ -1,0 +1,64 @@
+#利用存储过程插入百万测试数据
+##一、建表
+1、建订单表
+```mysql
+CREATE TABLE `order_today` (
+`id` varchar(32) NOT NULL COMMENT '主键',
+`amount` decimal(15,2) NOT NULL COMMENT '订单金额',
+`order_status` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '支付状态  S：支付成功、F：订单支付失败',
+`pay_success_time` datetime NOT NULL COMMENT '支付成功时间',
+`create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+
+2、建备用表
+
+`CREATE TABLE order_record like order_today;`
+
+##二、编写存储过程
+```mysql
+DROP PROCEDURE IF EXISTS test;
+CREATE PROCEDURE test()
+BEGIN
+    DECLARE n,i INT;
+    SET i = 1000000;
+    SET n = 1 + i;
+    WHILE n <= (10 + i)
+        DO
+            INSERT INTO order_today (id, amount, order_status, pay_success_time, create_time)
+            VALUES (n, FLOOR(1 + RAND() * 100), 'S',
+                    CONCAT(FLOOR(2020), '-', LPAD(FLOOR(1 + (RAND() * 12)), 2, 0), '-',
+                           LPAD(FLOOR(3 + (RAND() * 8)), 2, 0), ' ', LPAD(FLOOR(0 + (RAND() * 23)), 2, 0), ':',
+                           LPAD(FLOOR(0 + (RAND() * 59)), 2, 0), ':', LPAD(FLOOR(0 + (RAND() * 59)), 2, 0)),
+                    CONCAT(FLOOR(2020), '-', LPAD(FLOOR(1 + (RAND() * 12)), 2, 0), '-',
+                           LPAD(FLOOR(3 + (RAND() * 8)), 2, 0), ' ', LPAD(FLOOR(0 + (RAND() * 23)), 2, 0), ':',
+                           LPAD(FLOOR(0 + (RAND() * 59)), 2, 0), ':', LPAD(FLOOR(0 + (RAND() * 59)), 2, 0)));
+            SET n = n + 1;
+        END WHILE;
+END 
+```
+
+##三、执行存储过程
+
+`CALL test ();`
+
+##四、执行sql，将订单表数据转移到备用表，同时模拟下单，插入数据到订单表
+```mysql
+INSERT INTO order_record SELECT
+*
+FROM
+order_today
+WHERE
+pay_success_time < '2020-03-08 00:00:00';
+```
+
+##五、由于上面的操作会导致扫全表，进而造成表锁，下单失败，优化为给字段加索引
+```mysql
+INSERT INTO order_record SELECT
+*
+FROM
+order_today FORCE INDEX (idx_pay_suc_time)
+WHERE
+pay_success_time < '2020-03-08 00:00:00';
+```
