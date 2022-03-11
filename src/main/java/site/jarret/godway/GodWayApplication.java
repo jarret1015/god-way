@@ -1,4 +1,4 @@
-package com.jarret.godway;
+package site.jarret.godway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
