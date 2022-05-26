@@ -23,7 +23,7 @@ Git Flow存在两个长期的独立分支：主分支master和开发分支develo
 
 - Hotfix分支通常用于紧急修复当前发布的版本中出现的严重问题，从发布版本的标签或master主分支创建，问题修复后合并回master主分支并打上新的版本号标签（Tag），同时也合并回develop分支或者正在进行中的Release分支。创建单独的Hotfix分支可以避免打断正在进行中的各项开发工作，客户也不需要等到下一个发布周期才能拿到修复。
 
-  ![Git Flow][git]
+  ![Git Flow](/img/Git Flow.jpg)
 
   
 
@@ -39,7 +39,7 @@ Git Flow存在两个长期的独立分支：主分支master和开发分支develo
 
   Github Flow最大的特点是只有一个长期分支，即主分支master，且主分支始终保持可发布状态。从master上创建新分支进行功能开发、问题修复等，这些分支通过pull request将代码合并到master。为了保证主分支的代码质量，master的权限只开放给一部分人。Pull request是请求别人pull你的代码库（repository），也就是把开发分支的代码经过代码评审并通过测试后，让有权限的管理员合并回master。不过在实际情况中，代码评审不可能检查出提交的代码中的所有问题，所以对于每次提交的代码进行自动化测试，主分支代码的自动化部署尤其重要，自动化测试能在产品部署前及时发现一部分问题，如果产品部署之后发现严重问题，自动化部署可以在最短时间内把产品回滚到上一个版本。
   
-   ![GitHub Flow][github]​​
+   ![GitHub Flow](/img/GitHub Flow.jpg)
   
   
   
@@ -53,7 +53,7 @@ Git Flow存在两个长期的独立分支：主分支master和开发分支develo
   
   和Github Flow类似，master的修改权限只开放给部分人，开发分支的工作完成后，代码通过merge request（类似于GitHub Flow中的pull request）请求有权限的管理员把代码合并（merge）回主分支。
   
-  ![GitLab Flow][gitlab]
+  ![GitLab Flow](/img/GitLab Flow.jpg)
   
   # TBD Flow
   
@@ -61,7 +61,7 @@ Git Flow存在两个长期的独立分支：主分支master和开发分支develo
   
   TBD Flow没有pull或者push request，要求开发人员尽快把代码提交到主干分支，但是TBD Flow缺乏严格的流程来保证每一份提交代码的质量，如果一些项目开发人员众多且水平不一，同时工作在主分支上可能会在产品发布时才发现不可预知的问题，所以TBD Flow更适用于需要快速迭代的产品，如果在主干分支上发现问题，可以快速进行修复再合并回主干分支。
   
-  ![TBD Flow][tbd]
+  ![TBD Flow](/img/TBD Flow.jpg)
   
   # TBD++ Flow
   
@@ -88,7 +88,7 @@ Git Flow存在两个长期的独立分支：主分支master和开发分支develo
   
   软件产品发布之后，如果发现紧急或者严重的问题，此时需要基于版本发布时的Release分支标签创建Hotfix分支来修复此类问题，问题修复后合并回该Release分支以及其他同样需要此修复的Release分支，并打上新的版本号标签（Tag）用于发布，同时代码也需要合并回master以确保主分支的健壮性。
   
-  ![TBD++ Flow][tbd++]
+  ![TBD++ Flow](/img/TBD++ Flow.jpg)
   
   # 小结
   
